@@ -1,60 +1,115 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    .collapsible {
-      background-color: #E5E5E5;
-      color: black;
-      border: 2px solid white;
-      border-radius: 8px;
-      cursor: pointer;
-      padding: 18px;
-      width: 100%;
-      text-align: left;
-      outline: none;
-      font-size: 15px;
-    }
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<style>
+		.collapsible {
+			background-color: #E5E5E5;
+			color: black;
+			border: 2px solid white;
+			border-radius: 8px;
+			cursor: pointer;
+			padding: 18px;
+			width: 100%;
+			text-align: left;
+			outline: none;
+			font-size: 15px;
+		}
 
-    .active, .collapsible:hover {
-      background-color: #00000;
-    }
+		.content {
+			padding-top: 18px;
+			padding-left: 18px;
+			padding-bottom: 18px;
+			display: none;
+			overflow: hidden;
+			font-size: 18px;
+			line-height: 1.6;
+		}
 
-    .content {
-      padding-top: 18px;
-      padding-left: 18px;
-      padding-bottom: 18px;
-      display: none;
-      overflow: hidden;
-      font-size: 18px;
-      line-height: 1.6;
-    }
+		.textbox {
+			width: 90%;
+			height: 20px;
+		}
 
-    .textbox {
-      width: 100%;
-      height: 20px;
-    }
-  </style>
+		.othertextbox {
+			word-break: break-all;
+			height: 80px;
+			width: 90%;
+		}
+
+		section {
+			padding-bottom: 10px;
+			padding-left: 10px;
+		}
+
+		.minitextbox {
+			display: left;
+			width: 80px; 
+			height: 20px;
+		}
+
+		.addbutton {
+			background-color: #FFFFFF;
+			color: #2356FF;
+			border: 2px solid white;
+			border-radius: 8px;
+			cursor: pointer;
+			padding-left: 18px;
+			text-align: left;
+			outline: none;
+			font-size: 15px;
+		}
+
+		.subcategory {
+			padding-bottom: 20px;
+		}
+
+		.subheading {
+			font-weight: bold;
+		}
+
+		.radiob {
+			padding-right: 15px;
+		}
+
+		.collapsiblehide {
+			background-color: #E5E5E5;
+			color: black;
+			border: 2px solid white;
+			border-radius: 8px;
+			cursor: pointer;
+			padding: 18px;
+			width: 100%;
+			text-align: left;
+			outline: none;
+			font-size: 15px;
+			display: none;
+		}
+
+
+	</style>
 </head>
 
 <script type="text/javascript">
 
-  function WriteToDownload(formInput) {
+	function WriteToDownload(formInput) {
 
-    var headerInfo = "Assesment 1 Form Response\nRebuilding Together Montgomery County\n\n";
+		var headerInfo = "Assesment 1 Form Response\nRebuilding Together Montgomery County\n\n";
 
-    var initialInput = generateInitialInput(formInput);
-    var file_name = generateFileName(formInput);
+		var initialInput = generateInitialInput(formInput);
+		var file_name = generateFileName(formInput);
 
-    var tableHeadings = "\nLocation:,Concern:,Notes:\n";
+    // var tableHeadings = "\nLocation:,Concern:,Notes:\n";
 
-    var mainInput = generateMainInput(document.getElementById("allCollapsible"));
+    var mainInput = generateAllFormData();
 
-    var formOutput = headerInfo + initialInput + tableHeadings + mainInput;
+    var otherTextBoxContent = document.getElementById("otherTextBox").value;
+
+    var formOutput = headerInfo + initialInput + "\n" + mainInput + "\n\n" + "Other Notes: ," + otherTextBoxContent;
     download_text_file(formOutput, file_name);
-  }
+}
 
-  function generateInitialInput(formInput) {
+function generateInitialInput(formInput) {
     /*
     formInput (HTML): The HTML inside the <form> tags.
 
@@ -64,22 +119,22 @@
     ...
 
     for all tags with the class="initialInputClass"
-      */
+    	*/
     var initialFields = formInput.getElementsByClassName("initialInputClass");
 
     var outputText = "";
     for (var i=0; i<initialFields.length; i++) {
-      outputText += initialFields[i].name + ":," + initialFields[i].value + "\n";
+    	outputText += initialFields[i].name + ":," + initialFields[i].value + "\n";
     }
     return(outputText)
-  }
+}
 
-  function generateFileName(formInput) {
-    var file_name = "A1 Form Response - " + document.getElementById("homeowner").value + ".csv";
-    return(file_name)
-  }
+function generateFileName(formInput) {
+	var file_name = document.getElementById("homeowner").value + "- A1 Form Response.csv";
+	return(file_name)
+}
 
-  function download_text_file(text_content, file_name="A1 Form Response.csv") {
+function download_text_file(text_content, file_name="A1 Form Response.csv") {
     /*
     text_content (string): The text that you want downloaded.
     file_name (string): The file name of the download.
@@ -97,51 +152,159 @@
     //provide the name for the CSV file to be downloaded
     hiddenElement.download = file_name;
     hiddenElement.click();
+}
+
+var counter = 2;
+
+function location_quantity_html_block(checkbox_id, checkbox_label, section_name, collapsible_id, repairArea_label="NA", location_label="NA", insert_location="beforeEnd") {
+    /*
+    This function generates the Location, Quantity, Notes block of HTML code.
+    */
+
+    counter += 1;
+    checkbox_id += counter;
+    section_name += counter;
+
+    var html = [
+    `<div class="${collapsible_id}" name="${collapsible_id}">`,
+    `<div class="form-row" data-type="location-quantity" id="ag-${counter}">`,
+    `<input type="checkbox" id="${checkbox_id}" value="${checkbox_label}" data-repairArea="${repairArea_label}" data-location="${location_label}" onchange="javascript:toggleSectionVisible('${checkbox_id}', '${section_name}')" />`,
+    `<label for="${checkbox_id}"> ${checkbox_label}</label>`,
+    `<section class="section" name="${section_name}" id="${section_name}" style="display:none">`,             
+    `<label for="${section_name + "Location"}"> Location: </label>`,
+    `<input id="${section_name + "Location"}" type="text" style="display:inline" class="minitextbox"/>`,
+    `<label for="${section_name + "Quantity"}"> Quantity: </label>`,
+    `<input id="${section_name + "Quantity"}" type="text" style="display:inline" class="minitextbox"/>`,
+    `<button type="button" class ="addbutton" onclick="javascript:location_quantity_html_block(checkbox_id='${checkbox_id}', checkbox_label='${checkbox_label}', section_name='${section_name}', collapsible_id='ag-${counter}', repairArea_label='${repairArea_label}', location_label='${location_label}', insert_location='afterEnd')"><u>+ Add Another</u></button><br>`,
+    `<label for="${section_name + "Notes"}"> Notes: </label>`,
+    `<input id="${section_name + "Notes"}" type="text" style="display:inline" class="textbox"/>`,
+    '</section>',
+    '</div>',
+    `</div>`
+    ].join("\n");
+    document.getElementById(collapsible_id).insertAdjacentHTML(insert_location, html);
+}
+
+
+function location_only_html_block(checkbox_id, checkbox_label, section_name, collapsible_id, repairArea_label="NA", location_label="Living Space", insert_location="beforeEnd") {
+    /*
+    This function generates the Location, Quantity, Notes block of HTML code.
+    */
+
+    counter += 1;
+    checkbox_id += counter;
+    section_name += counter;
+
+    var html = [
+    `<div class="${collapsible_id}" name="${collapsible_id}">`,
+    `<div class="form-row" data-type="location-only">`,
+    `<input type="checkbox" id="${checkbox_id}" value="${checkbox_label}" data-repairArea="${repairArea_label}" data-location="${location_label}" onchange="javascript:toggleSectionVisible('${checkbox_id}', '${section_name}')" />`,
+    `<label for="${checkbox_id}"> ${checkbox_label}</label>`,
+    `<section class="section" name="${section_name}" id="${section_name}" style="display:none">`,             
+    `<label for="${section_name + "Location"}"> Location: </label>`,
+    `<input id="${section_name + "Location"}" type="text" style="display:inline" class="minitextbox"/>`,
+    `<button type="button" class ="addbutton" onclick="javascript:location_only_html_block(checkbox_id='${checkbox_id}', checkbox_label='${checkbox_label}', section_name='${section_name}', collapsible_id='${section_name}', repairArea_label='${repairArea_label}', location_label='${location_label}', insert_location='afterEnd')"><u>+ Add Another</u></button><br>`,
+    `<label for="${section_name + "Notes"}"> Notes: </label>`,
+    `<input id="${section_name + "Notes"}" type="text" style="display:inline" class="textbox"/>`,
+    '</section>',
+    '</div>',
+    `</div>`
+    ].join("\n");
+
+    counter += 1;
+    document.getElementById(collapsible_id).insertAdjacentHTML(insert_location, html);
+}
+
+function checkbox_textbox_html_block(checkbox_id, checkbox_label, textbox_id, collapsible_id, repairArea_label="NA", location_label="NA") {
+    /*
+    This function generates the textbox and label HTML code.
+    */
+    var html = [
+    `<div class="form-row" data-type="checkbox-textbox">`,
+    `<input type="checkbox" id="${checkbox_id}" value="${checkbox_label}" data-repairArea="${repairArea_label}" data-location="${location_label}" onchange="javascript:toggleTextboxVisible('${checkbox_id}', '${textbox_id}')" />`,
+    `<label for="${checkbox_id}"> ${checkbox_label}</label><br>`,
+    `<input id="${textbox_id}" type="text" style="display:none" class="textbox"/>`,
+    `</div>`
+    ].join("\n");
+    document.getElementById(collapsible_id).insertAdjacentHTML('beforeEnd', html);
+}
+
+function generateAllFormData () {
+	var main_collapsibles = document.getElementById("allCollapsible");
+	var rows = [];
+
+	var html_rows = main_collapsibles.getElementsByClassName("form-row");
+	for(var i=0; i<html_rows.length; i++) {
+		var form_data = html_rows[i];
+		if(form_data.getAttribute("data-type")=="checkbox-textbox") {
+			rows.push(scrapeCheckboxTextbox(form_data, location));
+		} else if (form_data.getAttribute("data-type")=="location-only") {
+			rows.push(scrapeLocationOnly(form_data));
+		} else {
+			rows.push(scrapeLocationQuantity(form_data));
+		}
+	}
+
+	var filtered_rows = ["REPAIR_AREA, LOCATION, QUANTITY, TYPE, DESCRIPTION"];
+	for(var i=0; i<rows.length; i++) {
+		if(rows[i].SHOULD_INCLUDE) {
+			filtered_rows.push([
+				rows[i].REPAIR_AREA,
+				rows[i].LOCATION,
+				rows[i].QUANTITY,
+				rows[i].TYPE,
+				rows[i].DESCRIPTION
+				].join(","));
+		}
+	}
+
+	var csv_body = filtered_rows.join("\n");
+	return(csv_body)
+  	// download_text_file(csv_body);
   }
 
-  function generateMainInput(allCollapsibles) {
-    /*
-    allCollapsibles (HTML): html inside <div id="allCollapsibles">
-
-    Iterates through each collapsible section and extracts the sectionname, checkbox, and textbox info.
-    */
-    var collapsibleSections = allCollapsibles.getElementsByClassName("content");
-    var outputText = "";
-
-    for (var i=0; i<collapsibleSections.length; i++) {
-      outputText += generateCollapsibleSectionInput(collapsibleSections[i], collapsibleSections[i].getAttribute("name"));
-    }
-    return(outputText)
+  function scrapeCheckboxTextbox(form_data) {
+  	var row = {};
+  	var checkbox = form_data.getElementsByTagName("input")[0];
+  	var textbox = form_data.getElementsByTagName("input")[1];
+  	row["LOCATION"] = checkbox.getAttribute("data-location");
+  	row["QUANTITY"] = 1;
+  	row["REPAIR_AREA"] = checkbox.getAttribute("data-repairArea");
+  	row["TYPE"] = checkbox.getAttribute("value");
+  	row["DESCRIPTION"] = textbox.value;
+  	row["SHOULD_INCLUDE"] = checkbox.checked;
+  	return(row)
   }
 
-  function generateCollapsibleSectionInput(collapsibleSection, sectionName) {
-    /*
-    collapsibleSection (HTML): html inside <div class="content">
-    sectionName (string):
+  function scrapeLocationOnly(form_data) {
+  	var row = {};
+  	var checkbox = form_data.getElementsByTagName("input")[0];
+  	var section = form_data.getElementsByTagName("section")[0];
+  	var location_textbox = section.getElementsByTagName("input")[0];
+  	var notes_textbox = section.getElementsByTagName("input")[1];
+  	row["LOCATION"] = location_textbox.value;
+  	row["QUANTITY"] = 1;
+  	row["REPAIR_AREA"] = checkbox.getAttribute("data-repairArea");
+  	row["TYPE"] = checkbox.getAttribute("value");
+  	row["DESCRIPTION"] = notes_textbox.value;
+  	row["SHOULD_INCLUDE"] = checkbox.checked;
+  	return(row)
+  }
 
-    Returns the inputted form data as a csv:
-    sectionName, checkboxvalue, textboxvalue
-    */
-    var sectionFields = collapsibleSection.getElementsByTagName("input");
-    
-    var outputText = "";
-    var checkboxes = [];
-    var textboxes = [];
-    for (var i=0; i < sectionFields.length; i++) {
-      if(i % 2==0){
-        checkboxes.push(sectionFields[i]);
-      }else{
-        textboxes.push(sectionFields[i]);
-      }
-    }
-
-    for (var j=0; j < checkboxes.length; j++) {
-      if(checkboxes[j].checked==true) {
-        outputText += sectionName + "," + checkboxes[j].value + "," + textboxes[j].value + "\n";
-      }
-    }
-    return(outputText)
-
+  function scrapeLocationQuantity(form_data) {
+  	var row = {};
+  	var checkbox = form_data.getElementsByTagName("input")[0];
+  	var section = form_data.getElementsByTagName("section")[0];
+  	var location_textbox = section.getElementsByTagName("input")[0];
+  	var quantity_textbox = section.getElementsByTagName("input")[1];
+  	var notes_textbox = section.getElementsByTagName("input")[2];
+  	row["LOCATION"] = location_textbox.value;
+  	row["QUANTITY"] = quantity_textbox.value;
+  	row["REPAIR_AREA"] = checkbox.getAttribute("data-repairArea");
+  	row["TYPE"] = checkbox.getAttribute("value");
+  	row["DESCRIPTION"] = notes_textbox.value;
+  	row["SHOULD_INCLUDE"] = checkbox.checked;
+  	return(row)
   }
 
 </script>
@@ -149,89 +312,319 @@
 
 <body>
 
-  <h2>Assessment 1 Form</h2>
+	<h2>Assessment 1 Form</h2>
 
-  <h3>Rebuilding Together Montgomery County</h4><br>
+	<h3>Rebuilding Together Montgomery County</h4><br>
 
-  <form>
-    <label for="name">Name:</label><br>
-    <input type="text" id="name" name="Name" class="initialInputClass"><br>
-    <label for="date">Date:</label><br>
-    <input type="text" id="date" name="Date" class="initialInputClass"><br>
-    <label for="homeowner">Homeowner:</label><br>
-    <input type="text" id="homeowner" name="Homeowner" class="initialInputClass"><br>
-    <label for="address">Address:</label><br>
-    <input type="text" id="address" name="Address" class="initialInputClass"><br><br>
+		<form>
+			<label for="name">Name:</label><br>
+			<input type="text" id="name" name="Name" class="initialInputClass"><br>
+			<label for="date">Date:</label><br>
+			<input type="text" id="date" name="Date" class="initialInputClass"><br>
+			<label for="homeowner">Homeowner:</label><br>
+			<input type="text" id="homeowner" name="Homeowner" class="initialInputClass"><br>
+			<label for="address">Address:</label><br>
+			<input type="text" id="address" name="Address" class="initialInputClass"><br><br>
 
-    <div id="allCollapsible" data-role="collapsible">
+			<span>How many bathrooms?</span>
+			<input type="radio" id="bathone" name="number" value="one" onchange="toggleCollapsibleHeaderVisible2(this, 'Bathroom1Header', 'Bathroom2Header', 'Bathroom3Header')" checked>
+			<label for="one" class="radiob">1</label>
+			<input type="radio" id="bathtwo" name="number" value="two" onchange="toggleCollapsibleHeaderVisible2(this, 'Bathroom1Header', 'Bathroom2Header', 'Bathroom3Header')">
+			<label for="two" class="radiob">2</label>
+			<input type="radio" id="baththree" name="number" value="three" onchange="toggleCollapsibleHeaderVisible2(this, 'Bathroom1Header', 'Bathroom2Header', 'Bathroom3Header')">
+			<label for="three" class="radiob">3</label><br><br>
+
+			<span>How many levels?</span>
+			<input type="radio" id="one" name="floors" value="one" checked>
+			<label for="one" class="radiob">1</label>
+			<input type="radio" id="two" name="floors" value="two">
+			<label for="female" class="radiob">2</label>
+			<input type="radio" id="three" name="floors" value="three">
+			<label for="three" class="radiob">3</label><br><br><br>
 
 
-      <button type="button" name="Kitchen" class="collapsible">Kitchen</button>
-      <div class="content" name="Kitchen">
-        <input type="checkbox" id="concernKitchen1" value="Sink" onchange="javascript:toggleOtherTextboxVisible('concernKitchen1', 'TextBoxKitchen1')" />
-        <label for="concernKitchen1"> Sink</label><br>   
-        <input id="TextBoxKitchen1" type="text" style="display:none" class="textbox"/>
-        <input type="checkbox" id="concernKitchen2" value="Appliances" onchange="javascript:toggleOtherTextboxVisible('concernKitchen2', 'TextBoxKitchen2')" />
-        <label for="concernKitchen2"> Appliance</label><br>
-        <input id="TextBoxKitchen2" type="text" style="display:none" class="textbox"/> 
-        <input type="checkbox" id="concernKitchen3" value="Windows" onchange="javascript:toggleOtherTextboxVisible('concernKitchen3', 'TextBoxKitchen3')" />
-        <label for="concernKitchen3"> Windows</label><br>
-        <input id="TextBoxKitchen3" type="text" style="display:none" class="textbox"/>
-      </div>
+			<div id="allCollapsible" data-role="collapsible">
 
-      <button type="button" name="Bathroom" class="collapsible">Bathroom</button>
-      <div class="content" name="Bathroom">
-        <input type="checkbox" id="concernBathroom1" value="Grab bar" onchange="javascript:toggleOtherTextboxVisible('concernBathroom1', 'TextBoxBathroom1')" />
-        <label for="concernBathroom1"> Grab bar</label><br>   
-        <input id="TextBoxBathroom1" type="text" style="display:none" class="textbox"/>
-        <input type="checkbox" id="concernBathroom2" value="Toilet" onchange="javascript:toggleOtherTextboxVisible('concernBathroom2', 'TextBoxBathroom2')" />
-        <label for="concernBathroom2"> Toilet</label><br>
-        <input id="TextBoxBathroom2" type="text" style="display:none" class="textbox"/> 
-        <input type="checkbox" id="concernBathroom3" value="Shower" onchange="javascript:toggleOtherTextboxVisible('concernBathroom3', 'TextBoxBathroom3')" />
-        <label for="concernBathroom3"> Shower</label><br>
-        <input id="TextBoxBathroom3" type="text" style="display:none" class="textbox"/>
-      </div>
+				<button type="button" name="Exterior" class="collapsible">Exterior/Envelope</button>
+				<div class="content" name="Exterior" id="ExteriorCollapsible">
+					<div class="subcategory" name="AccesstoHome" id="AccesstoHome"><label class="subheading">Access to Home</label>
+						<button type="button" id ="SecondButton" name="SecondAccess" class="addbutton" onclick="toggleSubcategoryVisible('SecondButton', 'SecondAccesstoHome')"><u>+ Add a 2nd Entryway</u></button><br></div>
+						<div class="subcategory" name="SecondAccesstoHome" id="SecondAccesstoHome" style="display:none"><label class="subheading">2nd Access to Home</label><br></div>
+						<div class="subcategory" name="Roof" id="Roof"><label class="subheading">Roof</label><br></div>
+						<div class="subcategory" name="Gutters" id="Gutters"><label class="subheading">Gutters, Downspouts, Drainage</label><br></div>
+						<div class="subcategory" name="Foundation" id="Foundation"><label class="subheading">Foundation, Siding</label><br></div>
+						<div class="subcategory" name="Yard" id="Yard"><label class="subheading">Yard</label><br></div>
+						<div class="subcategory" name="ExteriorOther" id="ExteriorOther"><label class="subheading">Other</label><br></div>
+					</div>
 
-      <button type="button" name="Exterior" class="collapsible">Exterior</button>
-      <div class="content" name="Exterior">
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-      </div>
 
-      <div>
-        <br>
-        <input type="button" value="submit" onclick="WriteToDownload(this.form)">
-      </div>
+					<button type="button" name="Smoke" class="collapsible">Smoke/Fire/CO</button>
+					<div class="content" name="Smoke" id="SmokeCollapsible">
+					</div>
 
-    </form>
+					<button type="button" name="Waterheater" class="collapsible">Water Heater and Clothes Dryer</button>
+					<div class="content" name="Waterheater" id="WaterheaterCollapsible">
+					</div>
 
-    <script>
+					<button type="button" name="HVAC" class="collapsible">Heating/Cooling</button>
+					<div class="content" name="HVAC" id="HVACCollapsible">
+					</div>
+
+					<button type="button" name="Electrical" class="collapsible">Electrical</button>
+					<div class="content" name="Electrical" id="ElectricalCollapsible">
+					</div>
+
+					<button type="button" name="Kitchen" class="collapsible">Kitchen</button>
+					<div class="content" name="Kitchen" id="KitchenCollapsible">
+					</div>
+
+					<button type="button" name="Bathroom1" class="collapsible" id="Bathroom1Header">Bathroom 1</button>
+					<div class="content" name="Bathroom1" id="Bathroom1Collapsible">
+					</div>
+
+					<button type="button" name="Bathroom2" class="collapsible" id="Bathroom2Header" style="display: none">Bathroom 2</button>
+					<div class="content" name="Bathroom2" id="Bathroom2Collapsible">
+					</div>
+
+
+					<button type="button" name="Bathroom3" class="collapsible" id="Bathroom3Header" style="display: none">Bathroom 3</button>
+					<div class="content" name="Bathroom3" id="Bathroom3Collapsible">
+					</div>
+
+
+					<button type="button" name="LivingSpaces" class="collapsible">General Living Spaces</button>
+					<div class="content" name="LivingSpaces" id="LivingSpaceCollapsible">
+					</div>
+
+					<button type="button" name="Stairs" class="collapsible">Stairs</button>
+					<div class="content" name="Stairs" id="StairsCollapsible">
+					</div>
+
+					<button type="button" name="Basement" class="collapsible">Basement</button>
+					<div class="content" name="Basement" id="BasementCollapsible">
+					</div>
+
+					<button type="button" name="OtherCollapsible" class="collapsible">Other</button>
+					<div class="content" name="OtherCollapsible" id="OtherCollapsible">
+						<textarea id="otherTextBox" type="text" class="othertextbox"></textarea>
+					</div>
+
+					<div>
+						<br>
+						<input type="button" value="submit" onclick="WriteToDownload(this.form)">
+					</div>
+
+				</div>
+
+			</form>
+
+
+
+			<script>
+
+      // checkbox_id, checkbox_label, textbox_id, *section_name*, collapsible_id, repairArea_label, location_label
+      
+      //Exterior/Envelope
+      checkbox_textbox_html_block("accessIngressSteps", "Ingress Steps", "accessIngressStepsTextBox", "AccesstoHome", "Accessibility", "Exterior");
+      checkbox_textbox_html_block("accessRails", "Guardrail/Handrail", "accessRailsTextBox", "AccesstoHome", "Accessibility", "Exterior");
+      checkbox_textbox_html_block("accessRamp", "Ramp Needed", "accessRampTextBox", "AccesstoHome", "Ramps/Lifts", "Exterior");
+      checkbox_textbox_html_block("accessOther", "Other ingress accessibility needs", "accessOtherTextBox", "AccesstoHome", "Accessibility", "Exterior");
+      checkbox_textbox_html_block("accessDoor", "Exterior Door", "accessDoorTextBox", "AccesstoHome", "Doors/Locks", "Exterior");
+      checkbox_textbox_html_block("accessLocks", "Door Locks, Deadbolt", "accessLocksTextBox", "AccesstoHome", "Doors/Locks", "Exterior");
+      checkbox_textbox_html_block("accessDoorTrim", "Door Trim", "accessDoorTrimTextBox", "AccesstoHome", "Doors/Locks", "Exterior");
+
+      checkbox_textbox_html_block("accessIngressSteps2", "Ingress Steps (2nd entrance)", "accessIngressStepsTextBox2", "SecondAccesstoHome", "Accessibility", "Exterior");
+      checkbox_textbox_html_block("accessRails2", "Guardrail/Handrail (2nd entrance)", "accessRailsTextBox2", "SecondAccesstoHome", "Accessibility", "Exterior");
+      checkbox_textbox_html_block("accessRamp2", "Ramp Needed (2nd entrance)", "accessRampTextBox2", "SecondAccesstoHome", "Ramps/Lifts", "Exterior");
+      checkbox_textbox_html_block("accessOther2", "Other ingress accessibility needs (2nd entrance)", "accessOtherTextBox2", "SecondAccesstoHome", "Accessibility", "Exterior");
+      checkbox_textbox_html_block("accessDoor2", "Exterior Door (2nd entrance)", "accessDoorTextBox2", "SecondAccesstoHome", "Doors/Locks", "Exterior");
+      checkbox_textbox_html_block("accessLocks2", "Door Locks, Deadbolt (2nd entrance)", "accessLocksTextBox2", "SecondAccesstoHome", "Doors/Locks", "Exterior");
+      checkbox_textbox_html_block("accessDoorTrim2", "Door Trim (2nd entrance)", "accessDoorTrimTextBox2", "SecondAccesstoHome", "Doors/Locks", "Exterior");
+
+      checkbox_textbox_html_block("roofRoof", "Roof", "roofRoofTextBox", "Roof", "Roof", "Exterior");
+      checkbox_textbox_html_block("roofFlashing", "Flashing", "roofFlashingTextBox", "Roof", "Roof", "Exterior");
+      checkbox_textbox_html_block("roofFascia", "Fascia", "roofFasciaTextBox", "Roof", "Roof", "Exterior");
+      checkbox_textbox_html_block("roofRecoat", "Recoat of Flat Roof needed", "roofRecoatTextBox", "Roof", "Roof", "Exterior");
+
+      checkbox_textbox_html_block("guttersGutters", "Gutters", "guttersGuttersTextBox", "Gutters", "Gutters", "Exterior");
+      checkbox_textbox_html_block("guttersDownspouts", "Downspouts", "guttersDownspoutsTextBox", "Gutters", "Gutters", "Exterior");
+      checkbox_textbox_html_block("guttersDrainage", "Drainage (grade yard away from foundation)", "guttersDrainageTextBox", "Gutters", "Gutters", "Exterior");
+
+      checkbox_textbox_html_block("foundationFoundation", "Foundation", "foundationFoundationTextBox", "Foundation", "Siding", "Exterior");
+      checkbox_textbox_html_block("foundationSiding", "Siding", "foundationSidingTextBox", "Foundation", "Siding", "Exterior");
+      checkbox_textbox_html_block("foundationWindowTrim", "Window Trim", "foundationWindowTrimTextBox", "Foundation", "Siding", "Exterior");
+      checkbox_textbox_html_block("foundationExteriorPaint", "Exterior Paint", "foundationExteriorPaintTextBox", "Foundation", "Painting", "Exterior");
+
+      checkbox_textbox_html_block("yardLandscaping", "Landscaping (encroaching trees, bushes, and debris)", "yardLandscapingTextBox", "Yard", "Yardwork", "Exterior");
+      checkbox_textbox_html_block("yardFence", "Fence", "yardFenceTextBox", "Yard", "Yardwork", "Exterior");
+      checkbox_textbox_html_block("yardDriveway", "Driveway/Retaining Wall", "yardDrivewayTextBox", "Yard", "Yardwork", "Exterior");
+
+      checkbox_textbox_html_block("exteriorOtherHouseNumber", "House Number visible?", "exteriorOtherHouseNumberTextBox", "ExteriorOther", "Yardwork", "Exterior");
+      checkbox_textbox_html_block("exteriorOtherLighting", "Exterior Lighting", "exteriorOtherLightingTextBox", "ExteriorOther", "Electrical", "Exterior");
+      checkbox_textbox_html_block("exteriorOtherDeck", "Deck/Porch", "exteriorOtherDeckTextBox", "ExteriorOther", "Deck/Porch", "Exterior");
+      checkbox_textbox_html_block("exteriorOtherGarage", "Garage Door", "exteriorOtherGarageTextBox", "ExteriorOther", "Doors/Locks", "Exterior");
+
+	  //Smoke/Fire/CO
+	  checkbox_textbox_html_block("smokeSmokes", "Smoke Detectors", "smokeSmokesTextBox", "SmokeCollapsible", "Fire Safety");
+	  checkbox_textbox_html_block("smokeCO", "CO Detectors", "smokeCOTextBox", "SmokeCollapsible", "Fire Safety");
+	  checkbox_textbox_html_block("smokeExtinguisher", "Fire Extinguisher (not expired)", "smokeExtinguisherTextBox", "SmokeCollapsible", "Fire Safety");
+	  checkbox_textbox_html_block("smokeUnvented", "Remove unvented gas heater", "smokeUnventedTextBox", "SmokeCollapsible", "Fire Safety");
+
+	  //Water Heater
+	  checkbox_textbox_html_block("waterheaterTemp", "Water Heater Temperature below 120 degrees", "waterheaterTempTextBox", "WaterheaterCollapsible", "Water Heater");
+	  checkbox_textbox_html_block("waterheaterGas", "Gas Water Heater", "waterheaterGasTextBox", "WaterheaterCollapsible", "Water Heater");
+	  checkbox_textbox_html_block("waterheaterElectric", "Electric Water Heater", "waterheaterGasTextBox", "WaterheaterCollapsible", "Water Heater");
+	  checkbox_textbox_html_block("waterheaterBlanket", "Water Heater Blanket", "waterheaterBlanketTextBox", "WaterheaterCollapsible", "Water Heater");
+	  checkbox_textbox_html_block("waterheaterClothes", " Clothes dryer vents to outside with rigid metal duct?", "waterheaterClothesTextBox", "WaterheaterCollapsible", "Water Heater");
+
+	  //Heating/Cooling
+	  checkbox_textbox_html_block("hvacHVAC", "HVAC service needed", "hvacHVACTextBox", "HVACCollapsible", "HVAC");
+	  checkbox_textbox_html_block("hvacDucts", "Exposed HVAC ducts", "hvacDuctsTextBox", "HVACCollapsible", "HVAC");
+	  checkbox_textbox_html_block("hvacDehumidifier", "Dehumidifier", "hvacDehumidifierTextBox", "HVACCollapsible", "HVAC");
+	  checkbox_textbox_html_block("hvacTherm", "Thermostat", "hvacThermTextBox", "HVACCollapsible", "HVAC");
+	  checkbox_textbox_html_block("hvacBaseboards", "Electric Baseboards", "hvacBaseboardsTextBox", "HVACCollapsible", "HVAC");
+
+	  //Electrical
+	  location_quantity_html_block("electricalSwitch", "Defective Switch", "electricalSwitchSection", "ElectricalCollapsible", "Electrical");
+	  location_quantity_html_block("electricalOutlet", "Defective Outlet", "electricalOutletSection", "ElectricalCollapsible", "Electical");
+	  location_quantity_html_block("electricalJunction", "Open Junction Box or Exposed Wires", "electricalJunctionSection", "ElectricalCollapsible", "Electical");
+	  location_quantity_html_block("electricalOverload", "Overloaded Outlets", "electricalOverloadSection", "ElectricalCollapsible", "Electical");
+	  location_quantity_html_block("electricalOther", "Other Electrical Hazards", "electricalOtherSection", "ElectricalCollapsible", "Electical");	  
+
+
+	  //Kitchen
+	  checkbox_textbox_html_block("kitchenOutlets", "GFCI outlets withing 6 ft of water supply", "kitchenOutletsTextBox", "KitchenCollapsible", "Electrical", "Kitchen");
+	  checkbox_textbox_html_block("kitchenSink", "Sink (faucet, drain, supply line)", "kitchenSinkTextBox", "KitchenCollapsible", "Plumbing", "Kitchen");
+	  checkbox_textbox_html_block("kitchenGarbageDisposal", "Garbage Disposal", "kitchenGarbageDisposalTextBox", "KitchenCollapsible", "Plumbing", "Kitchen");
+	  checkbox_textbox_html_block("kitchenFridge", "Refrigerator", "kitchenFridgeTextBox", "KitchenCollapsible", "Appliance", "Kitchen");
+	  checkbox_textbox_html_block("kitchenDishwasher", "Dishwasher", "kitchenDishwasherTextBox", "KitchenCollapsible", "Appliance", "Kitchen");
+	  checkbox_textbox_html_block("kitchenRange", "Range (stove and oven, hood exhausts to outside)", "kitchenRangeTextBox", "KitchenCollapsible", "Appliance", "Kitchen");
+	  checkbox_textbox_html_block("kitchenFan", "Through-wall Exhaust Fan", "kitchenFanTextBox", "KitchenCollapsible", "Electrical", "Kitchen");
+
+	  
+      //Bathroom
+      var args_array = [
+      ["Bathroom1Outlets", "GFCI outlets", "Bathroom1OutletsTextBox", "Bathroom1Collapsible", "Electrical", "Bathroom 1"],
+      ["Bathroom1Fan", "Exhaust Fan and switch)", "Bathroom1FanTextBox", "Bathroom1Collapsible", "Electrical", "Bathroom 1"],
+      ["bathroom1Sink", "Sink (Faucet, Drain, Supply Line)", "bathroom1SinkTextBox", "Bathroom1Collapsible", "Plumbing", "Bathroom 1"],
+      ["bathroom1Toilet", "Toilet (Flapper Refill Mechanism, Seat)", "bathroom1ToiletTextBox", "Bathroom1Collapsible", "Plumbing", "Bathroom 1"],
+      ["bathroom1ToiletSafety", "Toilet Safety Frame needed)", "bathroom1ToiletSafetyTextBox", "Bathroom1Collapsible", "Accessibility", "Bathroom 1"],
+      ["Bathroom1Tile", "Tile/Grout", "Bathroom1TileTextBox", "Bathroom1Collapsible", "Tub/Tile", "Bathroom 1"],
+      ["Bathroom1Caulking", "Caulking", "Bathroom1CaulkingTextBox", "Bathroom1Collapsible", "Tub/Tile", "Bathroom 1"],
+      ["bathroom1Shower", "Shower Head and Faucets", "bathroom1ShowerTextBox", "Bathroom1Collapsible", "Plumbing", "Bathroom 1"],
+      ["bathroom1SlipMats", "No-Slip Mats needed", "bathroom1SlipMatsTextBox", "Bathroom1Collapsible", "Accessibility", "Bathroom 1"],
+      ["bathroom1Chair", "Shower Chair needed", "bathroom1ChairTextBox", "Bathroom1Collapsible", "Accessibility", "Bathroom 1"],
+      ["bathroom1ModicationsMats", "Other tub/shower accessibility modifications?", "bathroom1ModificationsTextBox", "Bathroom1Collapsible", "Accessibility", "Bathroom 1"],
+      ["Bathroom1Grabbars", "Grab Bars needed", "Bathroom1GrabbarsTextBox", "Bathroom1Collapsible", "Accessibility", "Bathroom 1"]
+      ]
+
+      for (i=0; i < args_array.length; i++) {
+      	var row = args_array[i];
+      	checkbox_textbox_html_block(row[0], row[1], row[2], row[3], row[4], row[5]);
+      }
+
+      for (i=0; i < args_array.length; i++) {
+      	var row = args_array[i];
+      	checkbox_textbox_html_block(row[0].replace("1", "2"), row[1].replace("1", "2"), row[2].replace("1", "2"), row[3].replace("1", "2"), row[4].replace("1", "2"), row[5].replace("1", "2"));
+      }
+
+      for (i=0; i < args_array.length; i++) {
+      	var row = args_array[i];
+      	checkbox_textbox_html_block(row[0].replace("1", "3"), row[1].replace("1", "3"), row[2].replace("1", "3"), row[3].replace("1", "3"), row[4].replace("1", "3"), row[5].replace("1", "3"));
+      }
+//checkbox_id, checkbox_label, section_name, collapsible_id, repairArea_label
+
+//General Living Spaces
+location_quantity_html_block("livingSpacesWindows", "Windows", "livingSpaceWindowsSection", "LivingSpaceCollapsible", "Windows");
+location_only_html_block("livingSpacesFlooring", "Flooring", "livingSpaceFlooringSection", "LivingSpaceCollapsible", "Flooring");
+location_only_html_block("livingSpacesSubfloor", "Subfloor", "livingSpaceSubfloorSection", "LivingSpaceCollapsible", "Flooring");
+location_only_html_block("livingSpacesCarpet", "Remove Carpeting", "livingSpaceCarpetSection", "LivingSpaceCollapsible", "Flooring");
+location_only_html_block("livingSpacesDrywall", "Dry Wall", "livingSpaceDrywallSection", "LivingSpaceCollapsible", "Drywall");
+location_only_html_block("livingSpacesTripping", "Tripping Hazards", "livingSpaceTrippingSection", "LivingSpaceCollapsible", "Debris");
+location_quantity_html_block("livingSpacesInteriordoors", "Interior Doors", "livingSpaceInteriordoorsSection", "LivingSpaceCollapsible", "Doors/Locks");
+location_only_html_block("livingSpacesPainting", "Painting needed", "livingSpacePaintingSection", "LivingSpaceCollapsible", "Painting");
+location_quantity_html_block("livingSpacesLighting", "Lighting (Switches, Bulbs, and Fixtures)", "livingSpaceLightingSection", "LivingSpaceCollapsible", "Electrical");
+location_quantity_html_block("livingSpacesGrabbars", "Grab Bars needed", "livingSpaceGrabbarsSection", "LivingSpaceCollapsible", "Accessibility");
+location_only_html_block("livingSpacesWater", "Water Damage/Mold, Mildew", "livingSpaceWaterSection", "LivingSpaceCollapsible", "Plumbing");
+location_only_html_block("livingSpacesPests", "Signs of Pests", "livingSpacePestsSection", "LivingSpaceCollapsible", "Uncategorized Repairs");
+
+      //Stairs
+      checkbox_textbox_html_block("stairsTread", "Defective Tread", "stairsTreadTextBox", "StairsCollapsible", "Carpentry", "Stairs");
+      checkbox_textbox_html_block("stairsRise", "Uneven Rise Height", "stairsRiseTextBox", "StairsCollapsible", "Carpentry", "Stairs");
+      checkbox_textbox_html_block("stairsHandrail", "Handrail", "stairsHandrailTextBox", "StairsCollapsible", "Carpentry", "Stairs");
+      checkbox_textbox_html_block("stairsOther", "Other Stair Repairs needed?", "stairsOtherTextBox", "StairsCollapsible", "Carpentry", "Stairs");
+
+      //Basement
+      checkbox_textbox_html_block("basementWaterproof", "Waterproofing needed", "basementWaterproofTextBox", "BasementCollapsible", "Weatherization", "Basement");
+      checkbox_textbox_html_block("basementMold", "Mold/Mildew", "basementMoldTextBox", "BasementCollapsible", "Weatherization", "Basement");
+      checkbox_textbox_html_block("basementSumppump", "Sump pump", "basementSumppumpTextBox", "BasementCollapsible", "Weatherization", "Basement");
+
+
 //Collapsible Javascript
 var coll = document.getElementsByClassName("collapsible");
 var i;
 
 for (i = 0; i < coll.length; i++) {
-  coll[i].addEventListener("click", function() {
-    this.classList.toggle("active");
-    var content = this.nextElementSibling;
-    if (content.style.display === "block") {
-      content.style.display = "none";
-    } else {
-      content.style.display = "block";
-    }
-  });
+	coll[i].addEventListener("click", function() {
+		this.classList.toggle("active");
+		var content = this.nextElementSibling;
+		if (content.style.display === "block") {
+			content.style.display = "none";
+		} else {
+			content.style.display = "block";
+		}
+	});
 }
 
 
 //Toggle Textbox Javascript
-function toggleOtherTextboxVisible(checkbox_id, textbox_id)
+function toggleTextboxVisible(checkbox_id, textbox_id)
 {
-  var check = document.getElementById(checkbox_id);
-  if (check.checked) {
-    document.getElementById(textbox_id).style.display = 'block';
-  }
-  else
-    document.getElementById(textbox_id).style.display = 'none';                
+	var check = document.getElementById(checkbox_id);
+	if (check.checked) {
+		document.getElementById(textbox_id).style.display = 'block';
+	}
+	else
+		document.getElementById(textbox_id).style.display = 'none';                
 }
+
+function toggleSectionVisible(checkbox_id, section_id)
+{
+	var check = document.getElementById(checkbox_id);
+	if (check.checked) {
+		document.getElementById(section_id).style.display = 'block';
+	}
+	else
+		document.getElementById(section_id).style.display = 'none';                
+}
+
+//Bathroom Radio Buttons toggle Bathroom Collapsibles
+function toggleCollapsibleHeaderVisible2(radio, ch1, ch2, ch3) {
+	if (radio.value == "one") {
+		document.getElementById(ch1).style.display = 'block';
+		document.getElementById(ch2).style.display = 'none';
+		document.getElementById(ch3).style.display = 'none';
+	} else if (radio.value == "two") {
+		document.getElementById(ch1).style.display = 'block';
+		document.getElementById(ch2).style.display = 'block';
+		document.getElementById(ch3).style.display = 'none';
+	} else {
+		document.getElementById(ch1).style.display = 'block';
+		document.getElementById(ch2).style.display = 'block';
+		document.getElementById(ch3).style.display = 'block';	
+	}
+}
+
+//Second Access to Home
+function toggleSubcategoryVisible(button_id, subcategory_id) {
+	if ( document.getElementById(subcategory_id).style.display == 'none') {
+		document.getElementById(subcategory_id).style.display = 'block';
+	}
+	else
+		document.getElementById(subcategory_id).style.display = 'none';                
+}
+
+
 </script>
 
 </body>
