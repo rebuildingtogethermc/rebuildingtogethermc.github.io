@@ -96,16 +96,18 @@
 
     var headerInfo = "Assesment 1 Form Response\nRebuilding Together Montgomery County\n\n";
 
-    var initialInput = generateInitialInput(formInput);
     var file_name = generateFileName(formInput);
+    var initialInput = generateInitialInput(formInput);
 
     // var tableHeadings = "\nLocation:,Concern:,Notes:\n";
 
     var mainInput = generateAllFormData();
 
-    var otherTextBoxContent = document.getElementById("otherTextBox").value;
+    var otherTextBoxContent = wrapText(document.getElementById("otherTextBox").value);
 
-    var formOutput = headerInfo + initialInput + "\n" + mainInput + "\n\n" + "Other Notes: ," + otherTextBoxContent;
+    var radioButtonContent = generateRadioButtonSelection(formInput);
+
+    var formOutput = headerInfo + initialInput + "\n\n" + mainInput + "\n\n" + "Other Notes: ," + otherTextBoxContent + "\n\n" + radioButtonContent;
     download_text_file(formOutput, file_name);
   }
 
@@ -124,9 +126,44 @@
 
     var outputText = "";
     for (var i=0; i<initialFields.length; i++) {
-      outputText += initialFields[i].name + ":," + initialFields[i].value + "\n";
+      outputText += wrapText(initialFields[i].name + ":") + "," + wrapText(initialFields[i].value) + "\n";
     }
     return(outputText)
+  }
+
+  function generateRadioButtonSelection(formInput) {
+    // Bathrooms
+    bathroom_radio_button = document.getElementsByName("bathroom_count");
+    bathroom_value = getRadioButtonValue(bathroom_radio_button);
+
+    // Levels
+    level_radio_button = document.getElementsByName("floor_count");
+    level_value = getRadioButtonValue(level_radio_button);
+
+    // Bedrooms
+    bedroom_radio_button = document.getElementsByName("bedroom_count");
+    bedroom_value = getRadioButtonValue(bedroom_radio_button);
+
+    output_text = [
+      wrapText(bathroom_value) + "," + wrapText("bathrooms"),
+      wrapText(level_value) + "," + wrapText("levels"),
+      wrapText(bedroom_value) + "," + wrapText("bedrooms")
+    ].join("\n")
+    return(output_text);
+
+  }
+
+  function wrapText(txt){
+    return_text = "\"" + txt + "\"";
+    return(return_text)
+  }
+
+  function getRadioButtonValue(radios) {
+    for (var i = 0; i < radios.length; i++) {
+      if(radios[i].checked) {
+        return(i + 1)
+      }
+    }
   }
 
   function generateFileName(formInput) {
@@ -245,15 +282,15 @@ function location_only_html_block(checkbox_id, checkbox_label, section_name, col
   		}
   	}
 
-  	var filtered_rows = ["REPAIR_AREA, LOCATION, QUANTITY, TYPE, DESCRIPTION"];
+  	var filtered_rows = [[wrapText("REPAIR_AREA"), wrapText("LOCATION"), wrapText("QUANTITY"), wrapText("TYPE"), wrapText("DESCRIPTION")]];
   	for(var i=0; i<rows.length; i++) {
   		if(rows[i].SHOULD_INCLUDE) {
   			filtered_rows.push([
-  				rows[i].REPAIR_AREA,
-  				rows[i].LOCATION,
-  				rows[i].QUANTITY,
-  				rows[i].TYPE,
-  				rows[i].DESCRIPTION
+  				wrapText(rows[i].REPAIR_AREA),
+  				wrapText(rows[i].LOCATION),
+  				wrapText(rows[i].QUANTITY),
+  				wrapText(rows[i].TYPE),
+  				wrapText(rows[i].DESCRIPTION)
   				].join(","));
   		}
   	}
@@ -322,32 +359,32 @@ function location_only_html_block(checkbox_id, checkbox_label, section_name, col
       <label for="date">Date:</label><br>
       <input type="text" id="date" name="Date" class="initialInputClass"><br>
       <label for="homeowner">Homeowner Name (Last, First):</label><br>
-      <input type="text" id="HOname" name="HOname" class="initialInputClass"><br>
+      <input type="text" id="homeowner" name="Homeowner" class="initialInputClass"><br>
       <label for="address">Address:</label><br>
       <input type="text" id="address" name="Address" class="initialInputClass"><br><br>
 
       <span>How many bathrooms?</span>
-        <input type="radio" id="bathone" name="number" value="one" onchange="toggleCollapsibleHeaderVisible2(this, 'Bathroom1Header', 'Bathroom2Header', 'Bathroom3Header')" checked>
+        <input type="radio" id="bathone" name="bathroom_count" value="one" onchange="toggleCollapsibleHeaderVisible2(this, 'Bathroom1Header', 'Bathroom2Header', 'Bathroom3Header')" checked>
   		<label for="one" class="radiob">1</label>
-  		<input type="radio" id="bathtwo" name="number" value="two" onchange="toggleCollapsibleHeaderVisible2(this, 'Bathroom1Header', 'Bathroom2Header', 'Bathroom3Header')">
+  		<input type="radio" id="bathtwo" name="bathroom_count" value="two" onchange="toggleCollapsibleHeaderVisible2(this, 'Bathroom1Header', 'Bathroom2Header', 'Bathroom3Header')">
   		<label for="two" class="radiob">2</label>
-  		<input type="radio" id="baththree" name="number" value="three" onchange="toggleCollapsibleHeaderVisible2(this, 'Bathroom1Header', 'Bathroom2Header', 'Bathroom3Header')">
+  		<input type="radio" id="baththree" name="bathroom_count" value="three" onchange="toggleCollapsibleHeaderVisible2(this, 'Bathroom1Header', 'Bathroom2Header', 'Bathroom3Header')">
   		<label for="three" class="radiob">3</label><br><br>
 
   	  <span>How many levels?</span>
-        <input type="radio" id="one" name="floors" value="one" checked>
+        <input type="radio" id="one" name="floor_count" value="one" checked>
   		<label for="one" class="radiob">1</label>
-  		<input type="radio" id="two" name="floors" value="two">
+  		<input type="radio" id="two" name="floor_count" value="two">
   		<label for="female" class="radiob">2</label>
-  		<input type="radio" id="three" name="floors" value="three">
+  		<input type="radio" id="three" name="floor_count" value="three">
   		<label for="three" class="radiob">3</label><br><br>
 
   	  <span>How many bedrooms?</span>
-        <input type="radio" id="one" name="bedrooms" value="one" checked>
+        <input type="radio" id="one" name="bedroom_count" value="one" checked>
   		<label for="one" class="radiob">1</label>
-  		<input type="radio" id="two" name="bedroom" value="two">
+  		<input type="radio" id="two" name="bedroom_count" value="two">
   		<label for="female" class="radiob">2</label>
-  		<input type="radio" id="three" name="bedrooms" value="three">
+  		<input type="radio" id="three" name="bedroom_count" value="three">
   		<label for="three" class="radiob">3</label><br><br><br>
 
 
