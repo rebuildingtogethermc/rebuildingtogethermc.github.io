@@ -134,20 +134,35 @@
   function generateRadioButtonSelection(formInput) {
     // Bathrooms
     bathroom_radio_button = document.getElementsByName("bathroom_count");
-    bathroom_value = getRadioButtonValue(bathroom_radio_button);
+    bathroom_value = getRadioButtonIndex(bathroom_radio_button);
 
     // Levels
     level_radio_button = document.getElementsByName("floor_count");
-    level_value = getRadioButtonValue(level_radio_button);
+    level_value = getRadioButtonIndex(level_radio_button);
 
     // Bedrooms
     bedroom_radio_button = document.getElementsByName("bedroom_count");
-    bedroom_value = getRadioButtonValue(bedroom_radio_button);
+    bedroom_value = getRadioButtonIndex(bedroom_radio_button);
+
+    // HVAC
+    heating_radio_button = document.getElementsByName("heating_type", "value");
+    heating_value = getRadioButtonValue(heating_radio_button);
+
+    // Garage
+    garage_radio_button = document.getElementsByName("garage_button", "value");
+    garage_value = getRadioButtonValue(garage_radio_button);
+
+    // Appliances
+    appliace_radio_button = document.getElementsByName("appliance_type", "value");
+    appliance_value = getRadioButtonValue(appliace_radio_button);
 
     output_text = [
       wrapText(bathroom_value) + "," + wrapText("bathrooms"),
       wrapText(level_value) + "," + wrapText("levels"),
-      wrapText(bedroom_value) + "," + wrapText("bedrooms")
+      wrapText(bedroom_value) + "," + wrapText("bedrooms"),
+      wrapText(heating_value) + "," + wrapText("heating type"),
+      wrapText(garage_value) + "," + wrapText("garage type"),
+      wrapText(appliance_value) + "," + wrapText("appliance type")
     ].join("\n")
     return(output_text);
 
@@ -161,7 +176,15 @@
   function getRadioButtonValue(radios) {
     for (var i = 0; i < radios.length; i++) {
       if(radios[i].checked) {
-        return(i + 1)
+          return(radios[i].value)
+      }
+    }
+  }
+
+    function getRadioButtonIndex(radios) {
+    for (var i = 0; i < radios.length; i++) {
+      if(radios[i].checked) {
+          return(i + 1)
       }
     }
   }
@@ -383,9 +406,24 @@ function location_only_html_block(checkbox_id, checkbox_label, section_name, col
         <input type="radio" id="one" name="bedroom_count" value="one" checked>
   		<label for="one" class="radiob">1</label>
   		<input type="radio" id="two" name="bedroom_count" value="two">
-  		<label for="female" class="radiob">2</label>
+  		<label for="two" class="radiob">2</label>
   		<input type="radio" id="three" name="bedroom_count" value="three">
-  		<label for="three" class="radiob">3</label><br><br><br>
+  		<label for="three" class="radiob">3</label>
+      <input type="radio" id="four" name="bedroom_count" value="four">
+      <label for="four" class="radiob">4</label><br><br>
+
+      <span>Has a garage?</span>
+        <input type="radio" id="yes" name="garage_button" value="yes" checked>
+      <label for="yes" class="radiob">Yes</label>
+      <input type="radio" id="no" name="garage_button" value="no">
+      <label for="no" class="radiob">No</label><br><br>
+
+      <span>Type of apliances?</span>
+        <input type="radio" id="gas" name="appliance_type" value="gas" checked>
+      <label for="gas" class="radiob">Gas</label>
+      <input type="radio" id="elect" name="appliance_type" value="elect">
+      <label for="elect" class="radiob">Electric Only</label><br><br><br>
+
 
 
       <div id="allCollapsible" data-role="collapsible">
@@ -402,29 +440,14 @@ function location_only_html_block(checkbox_id, checkbox_label, section_name, col
         	   <div class="subcategory" name="ExteriorOther" id="ExteriorOther"><label class="subheading">Other</label><br></div>
         </div>
 
-
-        <button type="button" name="Smoke" class="collapsible">Smoke/Fire/CO</button>
-        <div class="content" name="Smoke" id="SmokeCollapsible">
-        </div>
-
-        <button type="button" name="Waterheater" class="collapsible">Water Heater and Clothes Dryer</button>
-        <div class="content" name="Waterheater" id="WaterheaterCollapsible">
-        </div>
-
-        <button type="button" name="HVAC" class="collapsible">Heating/Cooling</button>
-        <div class="content" name="HVAC" id="HVACCollapsible">
-        </div>
-
-        <button type="button" name="Electrical" class="collapsible">Electrical</button>
-        <div class="content" name="Electrical" id="ElectricalCollapsible">
-        </div>
-
         <button type="button" name="Kitchen" class="collapsible">Kitchen</button>
         <div class="content" name="Kitchen" id="KitchenCollapsible">
         </div>
 
         <button type="button" name="Bathroom1" class="collapsible" id="Bathroom1Header">Bathroom 1</button>
         <div class="content" name="Bathroom1" id="Bathroom1Collapsible">
+        <label for="bathlocation">Location:</label>
+      <input type="text" id="bathlocation" name="BathLocation" class="textbox", onchange="changeDataLocation('bathlocation')"><br>
         </div>
 
         <button type="button" name="Bathroom2" class="collapsible" id="Bathroom2Header" style="display: none">Bathroom 2</button>
@@ -448,6 +471,31 @@ function location_only_html_block(checkbox_id, checkbox_label, section_name, col
          <button type="button" name="Basement" class="collapsible">Basement</button>
         <div class="content" name="Basement" id="BasementCollapsible">
         </div>
+
+
+        <button type="button" name="Smoke" class="collapsible">Smoke/Fire/CO</button>
+        <div class="content" name="Smoke" id="SmokeCollapsible">
+        </div>
+
+        <button type="button" name="Waterheater" class="collapsible">Water Heater and Washer/Dryer</button>
+        <div class="content" name="Waterheater" id="WaterheaterCollapsible">
+        </div>
+
+        <button type="button" name="HVAC" class="collapsible">Heating/Cooling</button>
+        <div class="content" name="HVAC" id="HVACCollapsible">
+                <span>Type of Heating</span>
+        <input type="radio" id="gas" name="heating_type" value="gas" checked>
+      <label for="gas" class="radiob">Gas Furnace</label>
+      <input type="radio" id="elect" name="heating_type" value="elect">
+      <label for="elect" class="radiob">Electric Furnace</label>
+      <input type="radio" id="boil" name="heating_type" value="boil">
+      <label for="boil" class="radiob">Boiler</label>
+        </div>
+
+        <button type="button" name="Electrical" class="collapsible">Electrical</button>
+        <div class="content" name="Electrical" id="ElectricalCollapsible">
+        </div>
+
 
         <button type="button" name="OtherCollapsible" class="collapsible">Other</button>
         <div class="content" name="OtherCollapsible" id="OtherCollapsible">
@@ -476,7 +524,7 @@ function location_only_html_block(checkbox_id, checkbox_label, section_name, col
       checkbox_textbox_html_block("accessOther", "Other ingress accessibility needs", "accessOtherTextBox", "AccesstoHome", "Accessibility", "Exterior");
       checkbox_textbox_html_block("accessDoor", "Exterior Door", "accessDoorTextBox", "AccesstoHome", "Doors/Locks", "Exterior");
       checkbox_textbox_html_block("accessLocks", "Door Locks, Deadbolt", "accessLocksTextBox", "AccesstoHome", "Doors/Locks", "Exterior");
-      checkbox_textbox_html_block("accessDoorTrim", "Door Trim", "accessDoorTrimTextBox", "AccesstoHome", "Doors/Locks", "Exterior");
+      checkbox_textbox_html_block("accessDoorTrim", "Door Trim", "accessDoorTrimTextBox", "AccesstoHome", "Carpentry", "Exterior");
 
       checkbox_textbox_html_block("accessIngressSteps2", "Ingress Steps (2nd entrance)", "accessIngressStepsTextBox2", "SecondAccesstoHome", "Accessibility", "Exterior");
       checkbox_textbox_html_block("accessRails2", "Guardrail/Handrail (2nd entrance)", "accessRailsTextBox2", "SecondAccesstoHome", "Accessibility", "Exterior");
@@ -484,7 +532,7 @@ function location_only_html_block(checkbox_id, checkbox_label, section_name, col
       checkbox_textbox_html_block("accessOther2", "Other ingress accessibility needs (2nd entrance)", "accessOtherTextBox2", "SecondAccesstoHome", "Accessibility", "Exterior");
       checkbox_textbox_html_block("accessDoor2", "Exterior Door (2nd entrance)", "accessDoorTextBox2", "SecondAccesstoHome", "Doors/Locks", "Exterior");
       checkbox_textbox_html_block("accessLocks2", "Door Locks, Deadbolt (2nd entrance)", "accessLocksTextBox2", "SecondAccesstoHome", "Doors/Locks", "Exterior");
-      checkbox_textbox_html_block("accessDoorTrim2", "Door Trim (2nd entrance)", "accessDoorTrimTextBox2", "SecondAccesstoHome", "Doors/Locks", "Exterior");
+      checkbox_textbox_html_block("accessDoorTrim2", "Door Trim (2nd entrance)", "accessDoorTrimTextBox2", "SecondAccesstoHome", "Carpentry", "Exterior");
 
 	  checkbox_textbox_html_block("roofRoof", "Roof", "roofRoofTextBox", "Roof", "Roof", "Exterior");
 	  checkbox_textbox_html_block("roofFlashing", "Flashing", "roofFlashingTextBox", "Roof", "Roof", "Exterior");
@@ -495,9 +543,9 @@ function location_only_html_block(checkbox_id, checkbox_label, section_name, col
 	  checkbox_textbox_html_block("guttersDownspouts", "Downspouts", "guttersDownspoutsTextBox", "Gutters", "Gutters", "Exterior");
 	  checkbox_textbox_html_block("guttersDrainage", "Drainage (grade yard away from foundation)", "guttersDrainageTextBox", "Gutters", "Gutters", "Exterior");
 
-	  checkbox_textbox_html_block("foundationFoundation", "Foundation", "foundationFoundationTextBox", "Foundation", "Siding", "Exterior");
+	  checkbox_textbox_html_block("foundationFoundation", "Foundation", "foundationFoundationTextBox", "Foundation", "Uncategorized Repairs", "Exterior");
 	  checkbox_textbox_html_block("foundationSiding", "Siding", "foundationSidingTextBox", "Foundation", "Siding", "Exterior");
-	  checkbox_textbox_html_block("foundationWindowTrim", "Window Trim", "foundationWindowTrimTextBox", "Foundation", "Siding", "Exterior");
+	  checkbox_textbox_html_block("foundationWindowTrim", "Window Trim", "foundationWindowTrimTextBox", "Foundation", "Carpentry", "Exterior");
 	  checkbox_textbox_html_block("foundationExteriorPaint", "Exterior Paint", "foundationExteriorPaintTextBox", "Foundation", "Painting", "Exterior");
 
 	  checkbox_textbox_html_block("yardLandscaping", "Landscaping (encroaching trees, bushes, and debris)", "yardLandscapingTextBox", "Yard", "Yardwork", "Exterior");
@@ -510,51 +558,54 @@ function location_only_html_block(checkbox_id, checkbox_label, section_name, col
 	  checkbox_textbox_html_block("exteriorOtherGarage", "Garage Door", "exteriorOtherGarageTextBox", "ExteriorOther", "Doors/Locks", "Exterior");
 
 	  //Smoke/Fire/CO
-      checkbox_textbox_html_block("smokeSmokes", "Smoke Detectors", "smokeSmokesTextBox", "SmokeCollapsible", "Fire Safety");
+    checkbox_textbox_html_block("smokeSmokes", "Smoke Detectors", "smokeSmokesTextBox", "SmokeCollapsible", "Fire Safety");
 	  checkbox_textbox_html_block("smokeCO", "CO Detectors", "smokeCOTextBox", "SmokeCollapsible", "Fire Safety");
+    checkbox_textbox_html_block("smokeCombo", "Smoke/CO Combo", "smokeComboTextBox", "SmokeCollapsible", "Fire Safety");
 	  checkbox_textbox_html_block("smokeExtinguisher", "Fire Extinguisher (not expired)", "smokeExtinguisherTextBox", "SmokeCollapsible", "Fire Safety");
-	  checkbox_textbox_html_block("smokeUnvented", "Remove unvented gas heater", "smokeUnventedTextBox", "SmokeCollapsible", "Fire Safety");
 
 	  //Water Heater
 	  checkbox_textbox_html_block("waterheaterTemp", "Water Heater Temperature below 120 degrees", "waterheaterTempTextBox", "WaterheaterCollapsible", "Water Heater");
 	  checkbox_textbox_html_block("waterheaterGas", "Gas Water Heater", "waterheaterGasTextBox", "WaterheaterCollapsible", "Water Heater");
+    checkbox_textbox_html_block("waterheaterVent", "Gas Water Heater Vents Outside", "waterheaterVentTextBox", "WaterheaterCollapsible", "Water Heater");
 	  checkbox_textbox_html_block("waterheaterElectric", "Electric Water Heater", "waterheaterGasTextBox", "WaterheaterCollapsible", "Water Heater");
-	  checkbox_textbox_html_block("waterheaterBlanket", "Water Heater Blanket", "waterheaterBlanketTextBox", "WaterheaterCollapsible", "Water Heater");
-	  checkbox_textbox_html_block("waterheaterClothes", " Clothes dryer vents to outside with rigid metal duct?", "waterheaterClothesTextBox", "WaterheaterCollapsible", "Water Heater");
+	  checkbox_textbox_html_block("waterheaterWasher", "Washer/Dryer", "waterheaterWasherTextBox", "WaterheaterCollapsible", "Appliance");
+    checkbox_textbox_html_block("waterheaterClothes", " Clothes dryer vents to outside with rigid metal duct?", "waterheaterClothesTextBox", "WaterheaterCollapsible", "Appliance");
 
 	  //Heating/Cooling
-	  checkbox_textbox_html_block("hvacHVAC", "HVAC service needed", "hvacHVACTextBox", "HVACCollapsible", "HVAC");
+	  checkbox_textbox_html_block("hvacRepair", "HVAC repair needed", "hvacRepairTextBox", "HVACCollapsible", "HVAC");
+    checkbox_textbox_html_block("hvacReplace", "No Heat in Home", "hvacReplaceTextBox", "HVACCollapsible", "HVAC");
 	  checkbox_textbox_html_block("hvacDucts", "Exposed HVAC ducts", "hvacDuctsTextBox", "HVACCollapsible", "HVAC");
 	  checkbox_textbox_html_block("hvacDehumidifier", "Dehumidifier", "hvacDehumidifierTextBox", "HVACCollapsible", "HVAC");
 	  checkbox_textbox_html_block("hvacTherm", "Thermostat", "hvacThermTextBox", "HVACCollapsible", "HVAC");
 	  checkbox_textbox_html_block("hvacBaseboards", "Electric Baseboards", "hvacBaseboardsTextBox", "HVACCollapsible", "HVAC");
 
 	  //Electrical
-	  location_quantity_html_block("electricalSwitch", "Defective Switch", "electricalSwitchSection", "ElectricalCollapsible", "Electrical");
-	  location_quantity_html_block("electricalOutlet", "Defective Outlet", "electricalOutletSection", "ElectricalCollapsible", "Electical");
-	  location_quantity_html_block("electricalJunction", "Open Junction Box or Exposed Wires", "electricalJunctionSection", "ElectricalCollapsible", "Electical");
-	  location_quantity_html_block("electricalOverload", "Overloaded Outlets", "electricalOverloadSection", "ElectricalCollapsible", "Electical");
-	  location_quantity_html_block("electricalOther", "Other Electrical Hazards", "electricalOtherSection", "ElectricalCollapsible", "Electical");	  
+	  location_quantity_html_block("electricalSwitch", "Switch", "electricalSwitchSection", "ElectricalCollapsible", "Electrical");
+	  location_quantity_html_block("electricalOutlet", "Outlet", "electricalOutletSection", "ElectricalCollapsible", "Electrical");
+	  location_quantity_html_block("electricalJunction", "Open Junction Box or Exposed Wires", "electricalJunctionSection", "ElectricalCollapsible", "Electrical");
+	  location_quantity_html_block("electricalOverload", "Overloaded Outlets", "electricalOverloadSection", "ElectricalCollapsible", "Electrical");
+	  location_quantity_html_block("electricalOther", "Other Electrical Hazards", "electricalOtherSection", "ElectricalCollapsible", "Electrical");	 
+    location_quantity_html_block("electricalBreaker", "GFI Breaker Panel", "electricalBreakerSection", "ElectricalCollapsible", "Electrical"); 
 
 
 	  //Kitchen
-      checkbox_textbox_html_block("kitchenOutlets", "GFCI outlets withing 6 ft of water supply", "kitchenOutletsTextBox", "KitchenCollapsible", "Electrical", "Kitchen");
+      checkbox_textbox_html_block("kitchenOutlets", "GFCI outlets within 6 ft of water supply", "kitchenOutletsTextBox", "KitchenCollapsible", "Electrical", "Kitchen");
       checkbox_textbox_html_block("kitchenSink", "Sink", "kitchenSinkTextBox", "KitchenCollapsible", "Plumbing", "Kitchen");
-      checkbox_textbox_html_block("kitchenGarbageDisposal", "Garbage Disposal", "kitchenGarbageDisposalTextBox", "KitchenCollapsible", "Plumbing", "Kitchen");
+      checkbox_textbox_html_block("kitchenGarbageDisposal", "Garbage Disposal", "kitchenGarbageDisposalTextBox", "KitchenCollapsible", "Appliance", "Kitchen");
       checkbox_textbox_html_block("kitchenFridge", "Refrigerator", "kitchenFridgeTextBox", "KitchenCollapsible", "Appliance", "Kitchen");
       checkbox_textbox_html_block("kitchenDishwasher", "Dishwasher", "kitchenDishwasherTextBox", "KitchenCollapsible", "Appliance", "Kitchen");
-      checkbox_textbox_html_block("kitchenRange", "Range (stove and oven, hood exhausts to outside)", "kitchenRangeTextBox", "KitchenCollapsible", "Appliance", "Kitchen");
-      checkbox_textbox_html_block("kitchenFan", "Through-wall Exhaust Fan", "kitchenFanTextBox", "KitchenCollapsible", "Electrical", "Kitchen");
-      checkbox_textbox_html_block("kitchenCabinets", "Cabinets and Counters", "kitchenCabinetsTextBox", "KitchenCollapsible", "ElectricalCarpentry", "Kitchen");
+      checkbox_textbox_html_block("kitchenRange", "Range", "kitchenRangeTextBox", "KitchenCollapsible", "Appliance", "Kitchen");
+      checkbox_textbox_html_block("kitchenFan", "Proper Exhaust (Fan, Hood Vent, or Windows)", "kitchenFanTextBox", "KitchenCollapsible", "Uncategorized Repairs", "Kitchen");
+      checkbox_textbox_html_block("kitchenCabinets", "Cabinets and Counters", "kitchenCabinetsTextBox", "KitchenCollapsible", "Carpentry", "Kitchen");
 
     
       //Bathroom
  	  var args_array = [
 		["Bathroom1Outlets", "GFCI outlets", "Bathroom1OutletsTextBox", "Bathroom1Collapsible", "Electrical", "Bathroom 1"],
-		["Bathroom1Fan", "Exhaust Fan and switch)", "Bathroom1FanTextBox", "Bathroom1Collapsible", "Electrical", "Bathroom 1"],
+		["Bathroom1Fan", "Exhaust Fan and switch", "Bathroom1FanTextBox", "Bathroom1Collapsible", "Electrical", "Bathroom 1"],
 		["bathroom1Sink", "Sink", "bathroom1SinkTextBox", "Bathroom1Collapsible", "Plumbing", "Bathroom 1"],
-		["bathroom1Toilet", "Toilet (Flapper Refill Mechanism, Seat)", "bathroom1ToiletTextBox", "Bathroom1Collapsible", "Plumbing", "Bathroom 1"],
-		["bathroom1ToiletSafety", "Toilet Safety Frame needed)", "bathroom1ToiletSafetyTextBox", "Bathroom1Collapsible", "Accessibility", "Bathroom 1"],
+		["bathroom1Toilet", "Toilet (Guts, Seat, etc.)", "bathroom1ToiletTextBox", "Bathroom1Collapsible", "Plumbing", "Bathroom 1"],
+		["bathroom1ToiletSafety", "Comfort Height Toilet needed", "bathroom1ToiletSafetyTextBox", "Bathroom1Collapsible", "Accessibility", "Bathroom 1"],
 		["Bathroom1Tile", "Tile/Grout", "Bathroom1TileTextBox", "Bathroom1Collapsible", "Tub/Tile", "Bathroom 1"],
 		["Bathroom1Caulking", "Caulking", "Bathroom1CaulkingTextBox", "Bathroom1Collapsible", "Tub/Tile", "Bathroom 1"],
 		["bathroom1Shower", "Shower Head and Faucets", "bathroom1ShowerTextBox", "Bathroom1Collapsible", "Plumbing", "Bathroom 1"],
@@ -584,14 +635,14 @@ function location_only_html_block(checkbox_id, checkbox_label, section_name, col
       location_quantity_html_block("livingSpacesWindows", "Windows", "livingSpaceWindowsSection", "LivingSpaceCollapsible", "Windows");
       location_only_html_block("livingSpacesFlooring", "Flooring", "livingSpaceFlooringSection", "LivingSpaceCollapsible", "Flooring");
       location_only_html_block("livingSpacesSubfloor", "Subfloor", "livingSpaceSubfloorSection", "LivingSpaceCollapsible", "Flooring");
-      location_only_html_block("livingSpacesCarpet", "Remove Carpeting", "livingSpaceCarpetSection", "LivingSpaceCollapsible", "Flooring");
-      location_only_html_block("livingSpacesDrywall", "Dry Wall", "livingSpaceDrywallSection", "LivingSpaceCollapsible", "Drywall");
+      location_only_html_block("livingSpacesCarpet", "Carpeting", "livingSpaceCarpetSection", "LivingSpaceCollapsible", "Carpeting");
+      location_only_html_block("livingSpacesDrywall", "Drywall", "livingSpaceDrywallSection", "LivingSpaceCollapsible", "Drywall");
       location_only_html_block("livingSpacesTripping", "Tripping Hazards", "livingSpaceTrippingSection", "LivingSpaceCollapsible", "Debris");
       location_quantity_html_block("livingSpacesInteriordoors", "Interior Doors", "livingSpaceInteriordoorsSection", "LivingSpaceCollapsible", "Doors/Locks");
       location_only_html_block("livingSpacesPainting", "Painting needed", "livingSpacePaintingSection", "LivingSpaceCollapsible", "Painting");
       location_quantity_html_block("livingSpacesLighting", "Lighting", "livingSpaceLightingSection", "LivingSpaceCollapsible", "Electrical");
       location_quantity_html_block("livingSpacesGrabbars", "Grab Bars needed", "livingSpaceGrabbarsSection", "LivingSpaceCollapsible", "Accessibility");
-      location_only_html_block("livingSpacesWater", "Water Damage/Mold, Mildew", "livingSpaceWaterSection", "LivingSpaceCollapsible", "Plumbing");
+      location_only_html_block("livingSpacesWater", "Water Damage/Mold, Mildew", "livingSpaceWaterSection", "LivingSpaceCollapsible", "Uncategorized Repairs");
       location_only_html_block("livingSpacesPests", "Signs of Pests", "livingSpacePestsSection", "LivingSpaceCollapsible", "Uncategorized Repairs");
 
       //Stairs
@@ -603,7 +654,7 @@ function location_only_html_block(checkbox_id, checkbox_label, section_name, col
       //Basement
       checkbox_textbox_html_block("basementWaterproof", "Waterproofing needed", "basementWaterproofTextBox", "BasementCollapsible", "Weatherization", "Basement");
       checkbox_textbox_html_block("basementMold", "Mold/Mildew", "basementMoldTextBox", "BasementCollapsible", "Weatherization", "Basement");
-      checkbox_textbox_html_block("basementSumppump", "Sump pump", "basementSumppumpTextBox", "BasementCollapsible", "Weatherization", "Basement");
+      checkbox_textbox_html_block("basementSumppump", "Sump pump", "basementSumppumpTextBox", "BasementCollapsible", "Appliance", "Basement");
 
 
 //Collapsible Javascript
@@ -670,6 +721,20 @@ function toggleSubcategoryVisible(button_id, subcategory_id) {
     document.getElementById(subcategory_id).style.display = 'none';                
 }
 
+//Change data-location
+function changeDataLocation(tag_id) {
+  var new_location = document.getElementById(tag_id).value;
+  var collapsible = document.getElementById(tag_id).parentElement;
+  var form_rows = collapsible.getElementsByClassName("form-row");
+  for (var i=0; i<form_rows.length; i++) {
+    var input_fields = form_rows[i].querySelectorAll(`[data-location]`);
+    for (var j=0; j<input_fields.length; j++) {
+      if(new_location != "") {
+        input_fields[j].setAttribute("data-location", new_location + " Bathroom");
+      }
+    }
+  }
+}
 
 </script>
 
