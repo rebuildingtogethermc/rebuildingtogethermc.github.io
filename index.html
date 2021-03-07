@@ -206,7 +206,7 @@
     document.write(content_to_download);
 
     var hiddenElement = document.createElement('a');
-    hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(content_to_download);
+    hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(content_to_download);
     hiddenElement.target = '_blank';
     
     //provide the name for the CSV file to be downloaded
@@ -447,16 +447,20 @@ function location_only_html_block(checkbox_id, checkbox_label, section_name, col
         <button type="button" name="Bathroom1" class="collapsible" id="Bathroom1Header">Bathroom 1</button>
         <div class="content" name="Bathroom1" id="Bathroom1Collapsible">
         <label for="bathlocation">Location:</label>
-      <input type="text" id="bathlocation" name="BathLocation" class="textbox", onchange="changeDataLocation('bathlocation')"><br>
+      <input type="text" id="bathlocation1" name="BathLocation1" class="textbox", onchange="changeDataLocation('bathlocation1')"><br>
         </div>
 
         <button type="button" name="Bathroom2" class="collapsible" id="Bathroom2Header" style="display: none">Bathroom 2</button>
         <div class="content" name="Bathroom2" id="Bathroom2Collapsible">
+        <label for="bathlocation">Location:</label>
+      <input type="text" id="bathlocation2" name="BathLocation2" class="textbox", onchange="changeDataLocation('bathlocation2')"><br>
         </div>
 
 
         <button type="button" name="Bathroom3" class="collapsible" id="Bathroom3Header" style="display: none">Bathroom 3</button>
         <div class="content" name="Bathroom3" id="Bathroom3Collapsible">
+        <label for="bathlocation">Location:</label>
+       <input type="text" id="bathlocation3" name="BathLocation3" class="textbox", onchange="changeDataLocation('bathlocation3')"><br>
         </div>
 
 
