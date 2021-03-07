@@ -161,7 +161,7 @@
       wrapText(level_value) + "," + wrapText("levels"),
       wrapText(bedroom_value) + "," + wrapText("bedrooms"),
       wrapText(heating_value) + "," + wrapText("heating type"),
-      wrapText(garage_value) + "," + wrapText("garage type"),
+      wrapText(garage_value) + "," + wrapText("garage?"),
       wrapText(appliance_value) + "," + wrapText("appliance type")
     ].join("\n")
     return(output_text);
@@ -614,6 +614,7 @@ function location_only_html_block(checkbox_id, checkbox_label, section_name, col
 		["Bathroom1Tile", "Tile/Grout", "Bathroom1TileTextBox", "Bathroom1Collapsible", "Tub/Tile", "Bathroom 1"],
 		["Bathroom1Caulking", "Caulking", "Bathroom1CaulkingTextBox", "Bathroom1Collapsible", "Tub/Tile", "Bathroom 1"],
 		["bathroom1Shower", "Shower Head and Faucets", "bathroom1ShowerTextBox", "Bathroom1Collapsible", "Plumbing", "Bathroom 1"],
+    ["bathroom1ShowerOther", "Other Shower/Tub", "bathroom1ShowerOtherTextBox", "Bathroom1Collapsible", "Tub/Tile", "Bathroom 1"],
 		["bathroom1SlipMats", "No-Slip Mats needed", "bathroom1SlipMatsTextBox", "Bathroom1Collapsible", "Accessibility", "Bathroom 1"],
 		["bathroom1Chair", "Shower Chair needed", "bathroom1ChairTextBox", "Bathroom1Collapsible", "Accessibility", "Bathroom 1"],
 		["bathroom1ModicationsMats", "Other tub/shower accessibility modifications?", "bathroom1ModificationsTextBox", "Bathroom1Collapsible", "Accessibility", "Bathroom 1"],
@@ -654,6 +655,7 @@ function location_only_html_block(checkbox_id, checkbox_label, section_name, col
       checkbox_textbox_html_block("stairsTread", "Defective Tread", "stairsTreadTextBox", "StairsCollapsible", "Carpentry", "Stairs");
       checkbox_textbox_html_block("stairsRise", "Uneven Rise Height", "stairsRiseTextBox", "StairsCollapsible", "Carpentry", "Stairs");
       checkbox_textbox_html_block("stairsHandrail", "Handrail", "stairsHandrailTextBox", "StairsCollapsible", "Carpentry", "Stairs");
+      checkbox_textbox_html_block("stairsStairlift", "Stair Lift", "stairsStairliftTextBox", "StairsCollapsible", "Accessibility", "Stairs");
       checkbox_textbox_html_block("stairsOther", "Other Stair Repairs needed?", "stairsOtherTextBox", "StairsCollapsible", "Carpentry", "Stairs");
 
       //Basement
